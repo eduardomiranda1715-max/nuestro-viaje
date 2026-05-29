@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Viaje - Eduardo & Isabel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #0f0f1e;
+            color: #fff;
+        }
+
+        /* FONDO ANIMADO */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 25%, #16213e 50%, #0f3460 75%, #1a0a2e 100%);
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(10deg) brightness(1.1); }
+        }
+
+        /* EFECTO GLASSMORPHISM */
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 182, 193, 0.05);
+            border: 1px solid rgba(255, 182, 193, 0.1);
+        }
+
+        /* SCROLL EFFECT */
+        .scroll-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: rgba(255, 182, 193, 0.1);
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ff69b4, #9370db);
+            border-radius: 10px;
+        }
+
+        /* SECCIONES */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 20px;
+        }
+
+        /* PORTADA ÉPICA */
+        .hero {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .hero-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 4s ease-in infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .hero-content {
+            animation: slideInDown 1s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-emoji {
+            font-size: 7rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffb6d9 0%, #ff69b4 50%, #9370db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInDown 1s ease-out 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            margin: 20px 0 40px;
+            animation: slideInDown 1s ease-out 0.4s both;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .hero-names {
+            font-size: 2.5rem;
+            color: #ffb6d9;
+            font-weight: 700;
+            margin: 40px 0;
+            animation: slideInDown 1s ease-out 0.6s both;
+            letter-spacing: 2px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff69b4, #9370db);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            animation: slideInUp 1s ease-out 0.8s both;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(255, 105, 180, 0.5);
+        }
+
+        .celebration-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #ff69b4, #9370db);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.4);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .celebration-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .celebration-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(255, 105, 180, 0.6);
+        }
+
+        .celebration-button:hover::before {
+            left: 100%;
+        }
+
+        .celebration-button span {
+            position: relative;
+            z-index: 1;
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* TIMELINE SECTION */
+        .timeline-section {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            text-align: center;
+            margin-bottom: 80px;
+            background: linear-gradient(135deg, #ffb6d9 0%, #ff69b4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff69b4, #9370db, #ff69b4);
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.4));
+        }
+
+        .timeline-item {
+            margin-bottom: 100px;
+            position: relative;
+            opacity: 0;
+            animation: fadeInItem 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInItem {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.8s; }
+        .timeline-item:nth-child(5) { animation-delay: 1s; }
+        .timeline-item:nth-child(6) { animation-delay: 1.2s; }
+
+        .timeline-item:nth-child(odd) {
+            padding-right: calc(50% + 50px);
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            padding-left: calc(50% + 50px);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: #ff69b4;
+            border: 4px solid #0f0f1e;
+            border-radius: 50%;
+            top: 0;
+            z-index: 3;
+            box-shadow: 0 0 0 15px rgba(255, 105, 180, 0.2);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: translateX(-50%) scale(1.4);
+            box-shadow: 0 0 0 25px rgba(255, 105, 180, 0.4);
+            background: #ffb6d9;
+        }
+
+        .timeline-card {
+            background: rgba(255, 182, 193, 0.08);
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .timeline-item:hover .timeline-card::before {
+            left: 100%;
+        }
+
+        .timeline-item:hover .timeline-card {
+            background: rgba(255, 182, 193, 0.15);
+            border-color: rgba(255, 182, 193, 0.5);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(255, 105, 180, 0.2);
+        }
+
+        .timeline-date {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #9370db;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .timeline-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .timeline-title {
+            font-size: 1.8rem;
+            color: #ffb6d9;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .timeline-desc {
+            font-size: 1rem;
+            color: #d0d0d0;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .timeline-quote {
+            background: rgba(147, 112, 219, 0.15);
+            border-left: 4px solid #9370db;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-style: italic;
+            color: #e8d5f2;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #ffb6d9;
+            font-weight: 700;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 0;
+            }
+
+            .timeline-item {
+                padding-left: 50px !important;
+                padding-right: 0 !important;
+                text-align: left !important;
+            }
+
+            .timeline-dot {
+                left: -12px;
+            }
+
+            .timeline-card {
+                padding: 25px;
+            }
+
+            .timeline-title {
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* FINAL MESSAGE */
+        .final-section {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .final-card {
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(147, 112, 219, 0.15));
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            border-radius: 30px;
+            padding: 80px 40px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            animation: slideInScale 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .final-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.2) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .final-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-emoji {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .final-title {
+            font-size: 3rem;
+            color: #ffb6d9;
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+
+        .final-text {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+
+        .final-message {
+            font-size: 1.8rem;
+            color: #ff69b4;
+            font-weight: 700;
+            margin-top: 50px;
+            font-style: italic;
+        }
+
+        .final-author {
+            font-size: 1.3rem;
+            color: #9370db;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .loader-circle {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 105, 180, 0.3);
+            border-top: 4px solid #ff69b4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 2s ease-in-out infinite;
+            color: #ffb6d9;
+            font-size: 0.9rem;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffb6d9;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="loader" id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <div class="scroll-container">
+        <!-- PORTADA -->
+        <section class="section hero-section">
+            <div class="hero">
+                <div class="hero-particles" id="particles"></div>
+                <div class="hero-content">
+                    <div class="hero-emoji">💕</div>
+                    <h1>Nuestro Viaje</h1>
+                    <p>144,117 mensajes de amor, pasión y autenticidad</p>
+                    <div class="hero-names">Eduardo & Isabel</div>
+                    <button class="cta-button" onclick="scrollToSection(1)">Descubre Nuestra Historia</button>
+                </div>
+                <div class="scroll-indicator">
+                    <span>Desliza</span>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 5v14M5 12l7 7 7-7"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE -->
+        <section class="section timeline-section">
+            <div class="timeline-wrapper">
+                <h2 class="section-title">🚀 Nuestra Historia</h2>
+                <div class="timeline-line"></div>
+
+                <!-- Event 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">29 de Abril, 2024</div>
+                        <div class="timeline-emoji">💬</div>
+                        <div class="timeline-title">El Primer Hola</div>
+                        <div class="timeline-desc">
+                            Un simple "Holaaa" que cambió todo. No sabías que iba a encontrar al amor de tu vida al otro lado de la pantalla.
+                        </div>
+                        <div class="timeline-quote">
+                            "Me alegra amor" — Tu primer 'amor' en el chat 💕
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">17 de Mayo, 2024</div>
+                        <div class="timeline-emoji">👀</div>
+                        <div class="timeline-title">Nos Vimos en Persona</div>
+                        <div class="timeline-desc">
+                            De la pantalla a la realidad. Ese momento cuando la viste y confirmaste que todo lo sentido era verdadero. El nerviosismo, la magia del primer encuentro.
+                        </div>
+                        <div class="timeline-quote">
+                            "Que hermosa estás amor" — Lo primero que tu corazón acelerado quiso decir 💕
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">Mayo - Septiembre, 2024</div>
+                        <div class="timeline-emoji">🤝</div>
+                        <div class="timeline-title">Construyendo Confianza</div>
+                        <div class="timeline-desc">
+                            Esos meses donde se conocieron de verdad. Isabel conoció tus sueños, tus miedos, tus ganas de empezar de nuevo. Tú descubriste su fuerza en todas sus versiones.
+                        </div>
+                        <div class="timeline-quote">
+                            "Yo siempre quiero saber cómo te sientes, Amor quiero que mucho" — Demostrando tu amor genuino 💕
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">20 de Octubre, 2024</div>
+                        <div class="timeline-emoji">💍</div>
+                        <div class="timeline-title">Nos Volvemos Novios</div>
+                        <div class="timeline-desc">
+                            <span class="highlight">El momento que lo selló todo.</span> Ese día cuando decidieron que merecía un nombre oficial. Ya no eran simples citas. Eran pareja. Eran <span class="highlight">Eduardo e Isabel</span> frente al mundo.
+                        </div>
+                        <div class="timeline-quote">
+                            "Nos volvemos novios hoy" — El día que dijeron sí, para siempre 💕
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 5 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">Octubre 2024 - Mayo 2026</div>
+                        <div class="timeline-emoji">🔥</div>
+                        <div class="timeline-title">Pasión y Profundidad</div>
+                        <div class="timeline-desc">
+                            <span class="highlight">1,465 momentos apasionados</span> sin filtros. Mensajes que queman la pantalla. Pero también <span class="highlight">58,612 'Te amo'</span> que probaron que cada encuentro era alma tocando alma.
+                        </div>
+                        <div class="timeline-quote">
+                            "Yo quiero sentir cómo te desmoralizas por mí... Quiero que me muestres tu deseo... Ya quiero ver tu cara cuando te vengas" — La pasión sin filtros 🔥
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event 6 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-date">29 de Mayo, 2026</div>
+                        <div class="timeline-emoji">🎉</div>
+                        <div class="timeline-title">2 Años de Amor Verdadero</div>
+                        <div class="timeline-desc">
+                            <span class="highlight">144,117 mensajes.</span> Peleas que los hicieron más fuertes. 1,034 llegadas para aviso. Momentos en la calle, en la casa, en la cama. Abrazos cuando estaban tristes. <span class="highlight">Dos años de ser pareja, de construir, de amarse.</span>
+                        </div>
+                        <div class="timeline-quote">
+                            "Te amo más cada día. Hoy y siempre" — Después de 144,117 mensajes, tu amor sigue creciendo 💕
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENSAJE FINAL -->
+        <section class="section final-section">
+            <div class="final-card">
+                <div class="final-emoji">✨</div>
+                <h2 class="final-title">Lo que Realmente Importa</h2>
+                
+                <p class="final-text">
+                    No es la cantidad de mensajes.<br>
+                    No es los momentos apasionados.<br>
+                    No es ni siquiera los 79 "Te amo" diarios.
+                </p>
+
+                <p class="final-text">
+                    Lo importante es que en <span class="highlight">cada uno de esos 144,117 mensajes</span> 
+                    construyeron algo <span class="highlight">real, auténtico y hermoso.</span>
+                </p>
+
+                <p class="final-text">
+                    Aprendieron que pueden pelear y seguir adelante.<br>
+                    Que pueden desear fuego y también cuidarse mutuamente.<br>
+                    Que pueden tener momentos de luz y apoyarse en la oscuridad.
+                </p>
+
+                <p class="final-message">
+                    Te amo, Isabel.<br>
+                    No porque tenemos una bonita historia.<br>
+                    Sino porque cada día elegimos seguir escribiéndola juntos.
+                </p>
+
+                <p class="final-author">
+                    — Eduardo 💕
+                </p>
+
+                <div style="margin-top: 60px; border-top: 2px solid rgba(255, 182, 193, 0.2); padding-top: 40px;">
+                    <p style="font-size: 1.2rem; color: #e0e0e0; margin-bottom: 30px; line-height: 1.8;">
+                        Te invito a celebrar que hace <span class="highlight">2 años nos vimos</span> por primera vez 💕
+                    </p>
+                    <button class="celebration-button" onclick="return false;">
+                        <span>🎉 Vamos a Celebrar 🎉</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = '💕';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                heart.style.fontSize = (Math.random() * 1 + 1) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+
+        function scrollToSection(index) {
+            const sections = document.querySelectorAll('.section');
+            if (sections[index]) {
+                sections[index].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Intersection Observer para animaciones en scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Parallax effect
+        document.querySelector('.scroll-container').addEventListener('scroll', (e) => {
+            const scrolled = e.target.scrollTop;
+            const bg = document.querySelector('.bg-gradient');
+            if (bg) {
+                bg.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Init
+        createParticles();
+    </script>
+</body>
+</html>
